@@ -12,8 +12,5 @@ module.exports = {
     const web = new WebhookClient({ url: "https://discord.com/api/webhooks/1203593012588847144/b2-95y-kWqeQjXIWsdWkdJeyD5lmHD7RhAtAaNaCY--sCKpghi2KPejo7glIy6Iaec1K"})
     web.send({embeds: [perClunk]})
     
-
-
-
 }
 }

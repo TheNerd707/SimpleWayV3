@@ -21,7 +21,7 @@ module.exports = {
     .setDescription("A priority cooldown is now in effect.")
     .setColor("DarkBlue");
     const abacadaba = new EmbedBuilder()
-    .setTitle("Priority started")
+    .setTitle("Priority Ended")
     .setDescription(`Ended by: <@${interaction.user.id}>`)
     .setColor("Orange");
     

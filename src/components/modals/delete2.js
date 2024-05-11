@@ -17,8 +17,7 @@ module.exports = {
                 value: interaction.fields.getTextInputValue('delete3')
             }
         ]);
-        interaction.reply({content: "Closed"})
-        interaction.channel.send({embeds: [embed]});
+        interaction.reply({embeds: [embed]})
         interaction.guild.channels.edit(interaction.channel.id, {
             parent: interaction.guild.channels.cache.get("1201228376850059334"),
         })

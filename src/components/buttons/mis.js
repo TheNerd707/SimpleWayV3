@@ -10,9 +10,9 @@ module.exports = {
       PermissionFlagsBits;
     const staff = control.staff;
     const everyone = "1194127476536905838";
-
+    const num = await client.ticketNumber();
     const channel = await guild.channels.create({
-      name: `miscellaneous - ${user.username}`,
+      name: `miscellaneous - ${num}`,
       type: ChannelType.GuildText,
       parent: guild.channels.cache.get("1195021747485933658"),
 

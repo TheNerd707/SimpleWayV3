@@ -32,10 +32,12 @@ const client = new Client({
   partials: [Partials.Channel, Partials.Message],
 });
 
+//Needed for certant cmds
 client.priorityStatus= false;
 client.messageDelete = "";
 client.target = "";
 
+//Needed for function handalers to work
 client.commands = new Collection();
 client.buttons = new Collection();
 client.selectMenus = new Collection();
@@ -43,6 +45,7 @@ client.modals = new Collection();
 client.textCommands = new Collection();
 client.commandArray = [];
 
+//Function Handaler 
 const functionFolders = fs
   .readdirSync(`./src/functions`)
   .filter((folder) => folder !== "breaker");

@@ -8,7 +8,6 @@ module.exports = {
       const { commandName } = interaction;
       const command = commands.get(commandName);
       if (!command) return;
-      console.log(`Command '${commandName}' was ran.`);
       try {
         await command.execute(interaction, client);
       } catch (error) {

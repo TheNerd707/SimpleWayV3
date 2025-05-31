@@ -1,5 +1,14 @@
-const { PermissionFlagsBits, ChannelType, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
+const {
+  PermissionFlagsBits,
+  ChannelType,
+  EmbedBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  ActionRowBuilder,
+} = require("discord.js");
 const control = require(`./../../../control.json`);
+const ticketsDB = require(`../../schemas/ticket`);
+const Mongoose = require("mongoose");
 module.exports = {
   data: {
     name: "mod",
@@ -8,7 +17,7 @@ module.exports = {
     const { guild, member, user } = interaction;
     const { ViewChannel, ReadMessageHistory, SendMessages } =
       PermissionFlagsBits;
-    const staff = control.mod;
+    const staff = control.roles.ia;
     const everyone = "1194127476536905838";
     const num = await client.ticketNumber();
     const channel = await guild.channels.create({
@@ -31,18 +40,32 @@ module.exports = {
         },
       ],
     });
-    interaction.reply({ content: `Ticket opened. <#${channel.id}>`,
-    ephemeral: true, });
-    
-    const embed = new EmbedBuilder().setTitle("**PBR | MODERATION SUPPORT**")
-    .setDescription("Please provide the reason for opening the ticket and any evidence on the matter if you have any.");
+    interaction.reply({
+      content: `Ticket opened. <#${channel.id}>`,
+      flags: 64,
+    });
+
+    const embed = new EmbedBuilder()
+      .setTitle("**PBR | MODERATION SUPPORT**")
+      .setDescription(
+        "Please provide the reason for opening the ticket and any evidence on the matter if you have any."
+      );
 
     const button1 = new ButtonBuilder()
-    .setCustomId("delete")
-    .setLabel("CLOSE")
-    .setStyle(ButtonStyle.Danger);
+      .setCustomId("delete")
+      .setLabel("CLOSE")
+      .setStyle(ButtonStyle.Danger);
 
-    channel.send({embeds: [embed],
-   components: [new ActionRowBuilder().addComponents(button1)] })
+    channel.send({
+      embeds: [embed],
+      components: [new ActionRowBuilder().addComponents(button1)],
+    });
+    const ticket = new ticketsDB({
+      _id: new Mongoose.Types.ObjectId(),
+      channelId: channel.id,
+      userId: member.id,
+      type: "moderation",
+    });
+    await ticket.save();
   },
 };

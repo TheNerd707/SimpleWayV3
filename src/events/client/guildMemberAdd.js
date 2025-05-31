@@ -3,14 +3,27 @@ const chalk = require("chalk");
 module.exports = {
     name: 'guildMemberAdd',
     async execute(member, client) {
+
         const role = member.guild.roles.cache.get("1194131855323185226")
+        member.roles.add(role);
         const perClunk = new EmbedBuilder()
         .setColor("#fc1703")
         .setTitle("Welcome to Project Black Rose!")
         .setDescription(`<@${member.user.id}>\nMake sure to check out <#1194767732592353321> and <#1194283161279004713>`);
-    member.roles.add(role);   
-    const web = new WebhookClient({ url: "https://discord.com/api/webhooks/1203593012588847144/b2-95y-kWqeQjXIWsdWkdJeyD5lmHD7RhAtAaNaCY--sCKpghi2KPejo7glIy6Iaec1K"})
-    web.send({embeds: [perClunk]})
+    
+        const channel = member.guild.channels.cache.get("1366405864214368277");
+        const webhook = await channel.fetchWebhooks()
+        
+        if (webhook.size === 0) {
+            const newWebhook = await channel.createWebhook({
+                name: 'PBR | Project Black Rose',
+                avatar: 'https://cdn.discordapp.com/attachments/1052328721882816523/1236165364975407165/64117E29-FAD8-4EE8-BFFC-5E214D9190E4.png?ex=6812f1b5&is=6811a035&hm=322fc9318a78d534b56693de4f7a722f8c64c23197edd14e93ce41afdef212b3&',
+            });
+            await newWebhook.send({ embeds: [perClunk] });
+        } else {
+            const existingWebhook = webhook.first();
+            await existingWebhook.send({ embeds: [perClunk], username: 'PBR | Project Black Rose', avatarURL: 'https://cdn.discordapp.com/attachments/1052328721882816523/1236165364975407165/64117E29-FAD8-4EE8-BFFC-5E214D9190E4.png?ex=6812f1b5&is=6811a035&hm=322fc9318a78d534b56693de4f7a722f8c64c23197edd14e93ce41afdef212b3&' });
+        }
     
 }
 }

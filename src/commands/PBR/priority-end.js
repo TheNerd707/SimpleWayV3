@@ -1,11 +1,12 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const control = require(`./../../../control.json`)
+const file = require(`./../../../control.json`)
+const control = file.priority;
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("priority-end")
     .setDescription("Ends a priority."),
   async execute(interaction, client) {
-    if (client.priorityStatus) {
+    if (client.priorityStatus && !client.cooldown) {
       const priorityChannel = client.channels.cache.get(control.priority);
       const log = client.channels.cache.get(control.log)
     interaction.reply({
@@ -28,6 +29,7 @@ module.exports = {
     priorityChannel.send({embeds: [embed]})
     priorityChannel.send({embeds: [time]})
     log.send({embeds: [abacadaba]})
+    client.cooldown = true;
 
     function end() {
         const embed1 = new EmbedBuilder()
@@ -36,6 +38,7 @@ module.exports = {
         .setColor("Green");
         priorityChannel.send({embeds: [embed1]})
         client.priorityStatus = false;
+        client.cooldown = false;
     }
     setTimeout(end, 10 * 60 * 1000)
 

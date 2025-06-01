@@ -2,7 +2,8 @@ const { Schema, model } = require("mongoose");
 
 const ticketSchema = new Schema({
   _id: Schema.Types.ObjectId,
-  channelId: { type: String, required: true },
+  ticketNumber: { type: Number, required: true, unique: true },
+  channelId: { type: String, required: true, unique: true },
   userId: { type: String, required: true },
   type: String,
   members: Array,

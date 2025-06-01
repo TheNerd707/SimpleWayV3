@@ -26,10 +26,18 @@ module.exports = (client) => {
     const guildID = control.guild.id;
     const rest = new REST({ version: "9" }).setToken(process.env.token);
     try {
-    
-      await rest.put(Routes.applicationGuildCommands(clientID, guildID), {
-      body: client.commandArray,
-    });
+      if (process.env.NODE_ENV === "prod") {
+        console.log("Started refreshing application (/) commands.");
+        await rest.put(Routes.applicationCommands(clientID), {
+          body: client.commandArray,
+        });
+      }
+      if (process.env.NODE_ENV === "dev") {
+        console.log("Started refreshing application (/) commands for guild.");
+        await rest.put(Routes.applicationGuildCommands(clientID, guildID), {
+          body: client.commandArray,
+        });
+      }
   } catch (error) {
     console.error(error)
   }

@@ -61,6 +61,7 @@ module.exports = {
     });
     const ticket = new ticketsDB({
       _id: new Mongoose.Types.ObjectId(),
+      ticketNumber: num,
       channelId: channel.id,
       userId: member.id,
       type: "miscellaneous",

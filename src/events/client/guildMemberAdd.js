@@ -4,6 +4,7 @@ const control = require("../../../control.json");
 module.exports = {
     name: 'guildMemberAdd',
     async execute(member, client) {
+        if (!member.guild.id != control.guild.id) return;
 
         const role = member.guild.roles.cache.get(control.roles.unwhitelisted);
         member.roles.add(role);

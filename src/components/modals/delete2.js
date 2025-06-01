@@ -31,9 +31,45 @@ module.exports = {
         const user = await client.users.fetch(ticket.userId);
         const url = `https://projectblackrose.org/tickets/${ticket.channelId}`
         const embed = new EmbedBuilder()
+    .setTitle("Test")
+    .setFields(
+        {
+            name: "Ticket Number",
+            value: ticket.ticketNumber.toString(),
+            inline: true,
+        },
+        {
+            name: "Opened by",
+            value: `${user.username} (${user.id})`,
+            inline: true,
+        },
+        {
+            name: "Closed by",
+            value: `${interaction.user.username} (${interaction.user.id})`,
+            inline: true,
+        },
+        {
+            name: "Claimed By",
+            value: "Currently Unavailable",
+            inline: true,
+        },
+        {
+            name: "Messages",
+            value: ticket.messages.length.toString(),
+            inline: true,
+        },
+        {
+            name: "‎",
+            value: "‎",
+            inline: true,
+        },
+        {
+            name: "Reason",
+            value: reason || "No reason provided",
+            inline: false,
+        },
+    )
             .setColor("Red")
-            .setTitle("Ticket Closed")
-            .setDescription(`Ticket closed by <@${interaction.user.id}> for reason: ${reason}`)
             .setTimestamp();
         const button = new ButtonBuilder()
             .setLabel("View Ticket")

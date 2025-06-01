@@ -18,12 +18,12 @@ module.exports = {
     const { ViewChannel, ReadMessageHistory, SendMessages } =
       PermissionFlagsBits;
     const staff = control.roles.ia;
-    const everyone = "1194127476536905838";
+    const everyone = control.guild.id;
     const num = await client.ticketNumber();
     const channel = await guild.channels.create({
       name: `moderation - ${num}`,
       type: ChannelType.GuildText,
-      parent: guild.channels.cache.get("1195021747485933658"),
+      parent: guild.channels.cache.get(control.channels.ticketParent),
 
       permissionOverwrites: [
         {

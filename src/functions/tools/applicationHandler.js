@@ -4,7 +4,7 @@ const applicationDB = require("../../schemas/applications");
 const preamble = new EmbedBuilder()
   .setTitle("Before we start")
   .setDescription(
-    "Project Black Rose uses an automated proccess to make sure that applicants do not have to spend time answering simple questions during their interview. Please make sure to keep all responces to __**one**__ message. Dont worry, you are permited to edit the message to add more information if needed at any point."
+    "Project Black Rose uses an automated proccess to make sure that applicants do not have to spend time answering simple questions during their interview. Please make sure to keep all responces to __**one**__ message. Don't worry, you are permited to edit the message to add more information if needed at any point."
   );
 const question1 = new EmbedBuilder()
   .setTitle("Question 1")

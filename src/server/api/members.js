@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const control = require('../../../control.json');
 
 // Ensure JSON body parsing middleware is used
 router.use(express.json());
 
 module.exports = (client) => {
   router.get('/', async (req, res) => {
-   const guild = await client.guilds.fetch('1194127476536905838')
+   const guild = await client.guilds.fetch(control.guild.id);
    const memberCount = guild.memberCount;
    return res.send(memberCount)
 })
@@ -16,7 +17,7 @@ module.exports = (client) => {
   }
 
   const userId = req.body.id;
-  const guild = await client.guilds.fetch('1194127476536905838');
+  const guild = await client.guilds.fetch(control.guild.id);
   try {
     const member = await guild.members.fetch(userId);
     if (member) {

@@ -106,7 +106,7 @@ module.exports = (app, client) => {
       return res.redirect("/o-auth");
     }
 
-    const guild = await client.guilds.fetch("1194127476536905838");
+    const guild = await client.guilds.fetch(control.guild.id);
     let botAuth = {};
     try {
       const member = await guild.members.fetch(user.dcId);

@@ -1,17 +1,18 @@
 const { WebhookClient, EmbedBuilder } = require('discord.js')
 const chalk = require("chalk");
+const control = require("../../../control.json");
 module.exports = {
     name: 'guildMemberAdd',
     async execute(member, client) {
 
-        const role = member.guild.roles.cache.get("1194131855323185226")
+        const role = member.guild.roles.cache.get(control.roles.unwhitelisted);
         member.roles.add(role);
         const perClunk = new EmbedBuilder()
         .setColor("#fc1703")
         .setTitle("Welcome to Project Black Rose!")
         .setDescription(`<@${member.user.id}>\nMake sure to check out <#1194767732592353321> and <#1194283161279004713>`);
     
-        const channel = member.guild.channels.cache.get("1366405864214368277");
+        const channel = member.guild.channels.cache.get(control.channels.welcome);
         const webhook = await channel.fetchWebhooks()
         
         if (webhook.size === 0) {

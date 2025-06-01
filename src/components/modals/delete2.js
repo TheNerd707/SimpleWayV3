@@ -1,5 +1,6 @@
 const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js")
 const ticketDB = require("../../schemas/ticket");
+const control = require("../../../control.json");
 
 module.exports = {
     data: {
@@ -38,7 +39,7 @@ module.exports = {
             .setLabel("View Ticket")
             .setURL(url)
             .setStyle(ButtonStyle.Link);
-        const logChannel = client.channels.cache.get("1366780366790332516");
+        const logChannel = client.channels.cache.get(control.channels.transcrips);
         await logChannel.send({
             embeds: [embed],
             components: [new ActionRowBuilder().addComponents(button)]

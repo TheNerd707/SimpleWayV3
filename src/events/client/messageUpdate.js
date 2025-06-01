@@ -1,21 +1,10 @@
 const control = require("../../../control.json");
 const ticketsDB = require("../../schemas/ticket");
 module.exports = {
-  name: "messageDelete",
-  async execute(message, client) {
+  name: "messageUpdate",
+  async execute(old, message, client) {
     if (message.channel.parentId != control.channels.ticketParent) return;
-    if (message.channel.id === control.channels.transcrips) { // Ignore the transcript channel{
-      let newMessage = {};
-      newMessage.embeds = message.embeds;
-      newMessage.components = message.components;
-      newMessage.content = message.content;
-      newMessage.attachments = message.attachments.map(
-        (attachment) => attachment.url
-      );
-      newMessage.content = `This transcript was deleted by someone.`;
-      message.channel.send(newMessage);
-      return;
-    }
+    if (message.channel.id === control.channels.transcrips) return; // Ignore the transcript channel
     const ticket = await ticketsDB.findOne({
       channelId: message.channel.id,
     });
@@ -25,7 +14,19 @@ module.exports = {
     }
     const msg = ticket.messages.find((msg) => msg.id === message.id);
     if (msg) {
-      msg.status = "deleted";
+      if (msg.content.edited) {
+        if (!Array.isArray(msg.content.moreEdits)) {
+          msg.content.moreEdits = [];
+        }
+        msg.content.moreEdits.push(message.content);
+      } else {
+        msg.content = {
+        original: msg.content,
+        edited: message.content,
+        };
+      }
+      console.log(message.content)
+      console.log(msg)
       ticket.markModified("messages");
       await ticket.save();
     } else {

@@ -1,6 +1,7 @@
 const { ChannelType, MessageFlags, EmbedBuilder, PermissionFlagsBits } = require("discord.js");
 const applicationDB = require("../../schemas/applications");
 const mongoose = require("mongoose");
+const control = require("../../../control.json");
 
 module.exports = {
   data: {
@@ -16,14 +17,14 @@ module.exports = {
       }
     }
     const { guild, member } = interaction;
-    const everyone = "1194127476536905838";
+    const everyone = control.guild.id;
     
     const { ViewChannel, SendMessages} = PermissionFlagsBits;
 
     const channel = await guild.channels.create({
       name: `application - ${member.user.username}`,
       type: ChannelType.GuildText,
-      parent: guild.channels.cache.get("1194131359657107456"),
+      parent: guild.channels.cache.get(control.channels.apply),
 
       permissionOverwrites: [
         {

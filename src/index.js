@@ -1,5 +1,20 @@
 //Main File
 require("dotenv").config();
+const fs = require("fs");
+
+if (
+ process.env.NODE_ENV === "dev"
+) {
+  const dev = require("../control.dev.json");
+  fs.writeFileSync("./control.json", JSON.stringify(dev, null, 4));
+} else if (
+  process.env.NODE_ENV === "prod"
+) {
+  const prod = require("../control.prod.json");
+  fs.writeFileSync("./control.json", JSON.stringify(prod, null, 4));
+}
+
+const control = require("../control.json");
 const { databaseToken } = process.env;
 const { connect } = require("mongoose");
 const readline = require("readline");
@@ -35,7 +50,6 @@ const {
   Events,
   AuditLogEvent,
 } = require("discord.js");
-const fs = require("fs");
 
 const client = new Client({
   intents: [
@@ -80,7 +94,7 @@ client.handleComponents();
 
 client.login(process.env.token);
 (async () => {
-  connect("mongodb://192.168.0.21:27017/pbr").catch(console.error);
+  connect("mongodb://192.168.0.21:27017/"+control.db.name).catch(console.error);
 })();
 
 require("./server/main.js")(app, client);

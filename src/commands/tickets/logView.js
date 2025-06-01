@@ -21,7 +21,7 @@ module.exports = {
     ),
   async execute(interaction, client) {
     const guild = await client.guilds.fetch(interaction.guildId);
-    if (guild.id != control.guild.id)
+    if (guild.id === control.guild.id)
       return interaction.reply({
         content: "This command is not available in this server.",
         ephemeral: true,

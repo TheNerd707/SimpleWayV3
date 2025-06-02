@@ -8,12 +8,17 @@ module.exports = {
     name: "apply",
   },
   async execute(interaction, client) {
-    for (const [key, value] of client.applications) {
-      if (value.user === interaction.user.id) {
-        return interaction.reply({
-          content: "You already have an application open.",
-          flags: MessageFlags.Ephemeral,
-        });
+    const test = await applicationDB.find({
+      user: interaction.member.id,
+    });
+    if (test.length > 0) {
+      for (const app of test) {
+        if (app.status !== "completed" && app.status !== "NULL") {
+          return interaction.reply({
+            content: "You already have an application in progress. Contact the_nerd1 to nullify it.",
+            flags: MessageFlags.Ephemeral,
+          });
+        }
       }
     }
     const { guild, member } = interaction;
@@ -52,14 +57,11 @@ module.exports = {
       content: `<@${member.id}>`,
       embeds: [embed],
     });
-    client.applications.set(channel.id, {
-      user: member.id,
-      status: "rules",
-    });
     const app = new applicationDB({
       _id: new mongoose.Types.ObjectId(),
       user: member.id,
       channelId: channel.id,
+      status: "rules",
       messages: [
         {
           user: "ADMIN",

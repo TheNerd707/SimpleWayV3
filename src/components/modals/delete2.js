@@ -31,7 +31,7 @@ module.exports = {
         const user = await client.users.fetch(ticket.userId);
         const url = `https://projectblackrose.org/tickets/${ticket.channelId}`
         const embed = new EmbedBuilder()
-    .setTitle("Test")
+    .setTitle("Ticket Closed-"+ticket.type.charAt(0).toUpperCase() + ticket.type.slice(1))
     .setFields(
         {
             name: "Ticket Number",

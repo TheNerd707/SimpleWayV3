@@ -2,7 +2,7 @@ const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("
 
 module.exports = (client) => {
     client.sendApp = async () => {
-        const channel = await client.channels.fetch("1194283161279004713");
+        const channel = await client.channels.fetch("1378628678208196621");
         const embed = new EmbedBuilder()
             .setTitle("Join Us!")
             .setDescription("Click the button bellow if you wish to join our community!")

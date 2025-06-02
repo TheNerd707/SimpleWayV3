@@ -5,6 +5,10 @@ const application = new Schema({
     messages: Array,
     channelId: {type: String, required: true},
     status: String,
+    tries: {
+        type: Number,
+        default: 0,
+    },
 });
 
 module.exports = new model("Applications", application, "applications");

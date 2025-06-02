@@ -44,12 +44,9 @@ const finish = new EmbedBuilder()
 module.exports = (client) => {
   client.applicationHandler = async (message) => {
     const { channel, author, content } = message;
-    const ticket = client.applications.get(channel.id);
-    if (!ticket) {
-      return;
-    }
-    const app = await applicationDB.findOne({ channelId: channel.id });
-    app.messages.push({
+    const ticket = await applicationDB.findOne({ channelId: channel.id });
+    if (!ticket) return;
+    ticket.messages.push({
       user: author.id,
       message: content,
       time: new Date(),
@@ -66,11 +63,12 @@ module.exports = (client) => {
             "Please try again, make sure to check spelling and spacing."
           );
         } else {
-          message.reply(
-            "I understand that hooman intelligence is limited; however, this is not that difficult."
-          );
+            // Attach a file with the reply
+            message.reply({
+            content: "I understand that hooman intelligence is limited; however, this is not that difficult."
+            });
         }
-        app.save();
+        ticket.save();
         return;
       } else {
         channel.send({
@@ -78,11 +76,11 @@ module.exports = (client) => {
         });
 
         ticket.status = "1";
-        app.messages.push({
+        ticket.messages.push({
             user: "ADMIN",
             compleation: "0",
         })
-        app.save();
+        ticket.save();
         return;
       }
     } else if (ticket.status === "1") {
@@ -90,57 +88,57 @@ module.exports = (client) => {
         embeds: [question2],
       });
       ticket.status = "2";
-      app.messages.push({
+      ticket.messages.push({
             user: "ADMIN",
             compleation: "1",
         })
-        app.save();
+        ticket.save();
       return;
     } else if (ticket.status === "2") {
       channel.send({
         embeds: [question3],
       });
       ticket.status = "3";
-      app.messages.push({
+      ticket.messages.push({
             user: "ADMIN",
             compleation: "2",
         })
-        app.save();
+        ticket.save();
       return;
     } else if (ticket.status === "3") {
       channel.send({
         embeds: [question4],
       });
       ticket.status = "4";
-      app.messages.push({
+      ticket.messages.push({
             user: "ADMIN",
             compleation: "3",
         })
-        app.save();
+        ticket.save();
       return;
     } else if (ticket.status === "4") {
       channel.send({
         embeds: [question5],
       });
       ticket.status = "5";
-      app.messages.push({
+      ticket.messages.push({
             user: "ADMIN",
             compleation: "4",
         })
-        app.save();
+        ticket.save();
       return;
     } else if (ticket.status === "5") {
       channel.send({
         embeds: [finish],
       });
       ticket.status = "Awaiting Review";
-      app.messages.push({
+      ticket.messages.push({
             user: "ADMIN",
             compleation: "5",
         })
-        app.save();
+        ticket.save();
     } else {
-        app.save();
+        ticket.save();
         return;
     }
   };

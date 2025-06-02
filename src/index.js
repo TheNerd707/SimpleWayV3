@@ -73,7 +73,7 @@ client.buttons = new Collection();
 client.selectMenus = new Collection();
 client.modals = new Collection();
 client.textCommands = new Collection();
-client.applications = new Collection();
+
 client.commandArray = [];
 
 //Function Handaler

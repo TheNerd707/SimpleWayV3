@@ -1,15 +1,12 @@
-const edit = require("edit-json-file");
-let file = edit("storage.json");
+const ticketDB = require('../../schemas/ticket')
 
 module.exports = (client) => {
   client.ticketNumber = async () => {
-    if (process.env.NODE_ENV === "dev") {
-      return Math.floor(Math.random() * 1000000000) + 1; // For development, return a random number
+    const tickets = await ticketDB.find({}).sort({ ticketNumber: -1 }).limit(1);
+    if (tickets.length === 0) {
+      return 1; // If no tickets exist, start with ticket number 1
     }
-    const oldNumber = file.get("ticket_number");
-    const newNumber = oldNumber + 1;
-    file.set("ticket_number", newNumber);
-    file.save();
-    return newNumber;
+    return tickets[0].ticketNumber + 1; // Increment the highest ticket number by 1
   };
+
 };

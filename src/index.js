@@ -94,7 +94,7 @@ client.handleComponents();
 
 client.login(process.env.token);
 (async () => {
-  connect("mongodb://192.168.0.21:27017/"+control.db.name).catch(console.error);
+  connect("mongodb://192.168.137.9:27017/"+control.db.name).catch(console.error);
 })();
 
 require("./server/main.js")(app, client);

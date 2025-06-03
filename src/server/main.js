@@ -62,7 +62,7 @@ module.exports = (app, client) => {
   app.set("view engine", "ejs");
   app.set("views", path.join(__dirname, "views"));
 
-  app.get("/", async (req, res) => {
+  /* app.get("/", async (req, res) => {
     const { cookie } = req.query;
     if (cookie === "required") {
       res.render("index", { cookie: true });
@@ -145,5 +145,15 @@ module.exports = (app, client) => {
 
   app.use((req, res, next) => {
     res.status(404).render("not-found");
+  });
+  */
+  app.get("/.well-known/microsoft-identity-association.json", (req, res) => {
+    res.json({
+      associatedApplications: [
+        {
+          applicationId: "7f0e2e0a-29b0-43a0-8346-0720613cfb2e",
+        },
+      ],
+    });
   });
 };

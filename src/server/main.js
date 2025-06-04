@@ -5,6 +5,7 @@ const userDB = require("../schemas/user");
 const mongoose = require("mongoose");
 
 const { request } = require("undici");
+const { EmbedBuilder, WebhookClient } = require("discord.js");
 
 async function dcLoging(code) {
   try {
@@ -62,7 +63,7 @@ module.exports = (app, client) => {
   app.set("view engine", "ejs");
   app.set("views", path.join(__dirname, "views"));
 
-  /* app.get("/", async (req, res) => {
+  app.get("/", async (req, res) => {
     const { cookie } = req.query;
     if (cookie === "required") {
       res.render("index", { cookie: true });
@@ -143,17 +144,50 @@ module.exports = (app, client) => {
     res.render("defalt");
   });
 
+  app.get("/api/webhook", (req, res) => {
+    res.send("Webhook endpoint is active");
+  });
+  app.post("/api/webhook", async (req, res) => {
+    console.log("Received webhook request");
+    const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
+    const payload = req.body;
+
+    if (req.headers["x-github-event"] !== "push") {
+      return res.sendStatus(200);
+    }
+
+    const repo = payload.repository.full_name;
+    const pusher = payload.pusher.name;
+    const commits = payload.commits
+      .map(
+        (commit) =>
+          `${commit.id.slice(0, 7)}: ${commit.message}`
+      )
+      .join("\n");
+
+    try {
+      const embed = new EmbedBuilder()
+        .setColor("#008000")
+        .setTitle("Repository Update")
+        .setDescription(`New update to __**${repo}**__ by __**${pusher}**__`)
+        .addFields(
+          { name: "Commits:", value: commits || "No commits found" }
+        )
+        .setTimestamp();
+      const webhookClient = new WebhookClient({
+        url: DISCORD_WEBHOOK_URL,
+      });
+      await webhookClient.send({
+        embeds: [embed],
+      });
+      res.sendStatus(200);
+    } catch (err) {
+      console.error("Failed to post to Discord:", err);
+      res.sendStatus(500);
+    }
+  });
+
   app.use((req, res, next) => {
     res.status(404).render("not-found");
-  });
-  */
-  app.get("/.well-known/microsoft-identity-association.json", (req, res) => {
-    res.json({
-      associatedApplications: [
-        {
-          applicationId: "7f0e2e0a-29b0-43a0-8346-0720613cfb2e",
-        },
-      ],
-    });
   });
 };

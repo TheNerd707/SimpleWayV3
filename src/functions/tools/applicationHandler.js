@@ -46,6 +46,10 @@ module.exports = (client) => {
     const { channel, author, content } = message;
     const ticket = await applicationDB.findOne({ channelId: channel.id });
     if (!ticket) return;
+    if (author.id === "757068022530965706" || author.id === "776606148245454915") {
+      return;
+    }; // Ignore owner messages
+
     ticket.messages.push({
       user: author.id,
       message: content,

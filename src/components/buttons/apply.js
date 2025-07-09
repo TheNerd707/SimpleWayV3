@@ -37,6 +37,10 @@ module.exports = {
           allow: [ViewChannel, SendMessages],
         },
         {
+          id: control.roles.staff,
+          allow: [ViewChannel, SendMessages],
+        },
+        {
           id: everyone,
           deny: [ViewChannel, SendMessages],
         },

@@ -74,6 +74,20 @@ client.selectMenus = new Collection();
 client.modals = new Collection();
 client.textCommands = new Collection();
 
+client.pbr = {};
+client.pbr.cache = {
+  message: null,
+  roleplayActive: false,
+  hosts: [],
+  timestamp: null,
+  location: null,
+  players: {
+    onTime: [],
+    late: {},
+    notComing: [],
+  },
+};
+
 client.commandArray = [];
 
 //Function Handaler

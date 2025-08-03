@@ -1,32 +1,13 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const control = require("../../../control.json");
+const roleplay = require(`./../../schemas/roleplays`);
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('startrp')
         .setDescription('Starts a new roleplay session.'),
     async execute(interaction, client) {
-        let trueHost = false;
-        if (Array.isArray(client.pbr.cache.hosts) && client.pbr.cache.hosts.length > 0) {
-            // hosts is an array of user IDs
-            if (client.pbr.cache.hosts.includes(interaction.user.id)) {
-                trueHost = true;
-            }
-        }
-        if (!trueHost) {
-            return interaction.reply({
-                content: "You are not a host of this roleplay session.",
-                ephemeral: true,
-            });
-        }
-
-        if (!client.pbr.cache.roleplayActive) {
-            return interaction.reply({
-                content: "There is not a roleplay session in progress.",
-                ephemeral: true,
-            });
-        }
-
+        const rp = await roleplay.findOne({}).sort({ timestamp: -1 });
         const message1 = 'The roleplay session has started!';
         const message2 = 'Can I join?';
 
@@ -37,7 +18,6 @@ module.exports = {
             content: message,
             ephemeral: true,
         });
-        client.pbr.cache.roleplayActive = "started";
 
         const channel = client.channels.cache.get(control.channels.roleplay);
 
@@ -49,15 +29,17 @@ module.exports = {
             `**Started by:** <@${interaction.user.id}>\n\n` +
             '**On Time:**\n';
 
-        for (const playerId of client.pbr.cache.players.onTime) {
+        for (const playerId of rp.participants.ontime) {
             dataMessage += `<@${playerId}>\n`;
         }
         dataMessage += '\n**Late:**\n';
-        for (const [playerId, time] of Object.entries(client.pbr.cache.players.late)) {
+        for (const late of rp.participants.late) {
+            const playerId = late.userId;
+            const time = late.time;
             dataMessage += `<@${playerId}> - ${time}\n`;
         }
         dataMessage += '\n**Not Coming:**\n';
-        for (const playerId of client.pbr.cache.players.notComing) {
+        for (const playerId of rp.participants.absent) {
             dataMessage += `<@${playerId}>\n`;
         }
 

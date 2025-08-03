@@ -6,6 +6,9 @@ const {
 } = require("discord.js");
 const control = require("../../../control.json");
 
+const rpschema = require('../../schemas/roleplays.js');
+const mongoose = require("mongoose");
+
 const dayjs = require("dayjs");
 const utc = require("dayjs/plugin/utc");
 const timezone = require("dayjs/plugin/timezone");
@@ -78,12 +81,6 @@ module.exports = {
     ),
 
   async execute(interaction, client) {
-    if (client.pbr.cache.roleplayActive) {
-      return interaction.reply({
-        content: "There is already a roleplay event in progress.",
-        ephemeral: true,
-      });
-    }
 
     const location = interaction.options.getString("location");
     const timeInput = interaction.options.getString("time");
@@ -121,21 +118,28 @@ module.exports = {
     const unixTimestamp = eventTime.unix();
 
     // Save event state
-    client.pbr.cache.roleplayActive = true;
-    client.pbr.cache.hosts.push(userId);
+    const rp = new rpschema({
+      _id: new mongoose.Types.ObjectId(),
+      hosts: [userId],
+      participants: {
+        ontime: [userId],
+        late: [],
+        absent: [],
+        saysAttended: [],
+      },
+      timestamp: unixTimestamp,
+      location: location,
+    });
     const secondaryHost = interaction.options.getUser("secondary_host");
     if (secondaryHost) {
-      client.pbr.cache.hosts.push(secondaryHost.id);
-      client.pbr.cache.players.onTime.push(secondaryHost.id);
+      rp.hosts.push(secondaryHost.id);
+      rp.participants.ontime.push(secondaryHost.id);
     } else {
-      client.pbr.cache.hosts = [userId]; // Ensure only the primary host is set if no secondary host is provided
+      rp.hosts = [userId]; // Ensure only the primary host is set if no secondary host is provided
     }
-    client.pbr.cache.timestamp = unixTimestamp;
-    client.pbr.cache.location = location;
-    client.pbr.cache.players.onTime.push(userId);
-
     // Get embed from roleplay handler
-    const embed = await client.roleplayHandler();
+    await rp.save();
+    const embed = await client.roleplayHandler(rp._id);
 
     // Buttons
     const button1 = new ButtonBuilder()
@@ -160,7 +164,10 @@ module.exports = {
       ],
     });
 
-    client.pbr.cache.message = msg.id;
+    const rp2 = await rpschema.findById(rp._id);
+
+   rp2.messageId = msg.id;
+    await rp2.save();
 
     // Random fun reply
     const replies = [

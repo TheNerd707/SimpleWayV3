@@ -1,33 +1,39 @@
 const control = require("../../../control.json");
-
+const rpschema = require('../../schemas/roleplays.js');
 module.exports = {
   data: {
     name: 'ontime'
   },
   async execute(interaction, client) {
-    const { member} = interaction;
-    if (!client.pbr.cache.roleplayActive) {
+    const member = interaction.member;
+    const rp = await rpschema.findOne({}).sort({ timestamp: -1 });
+    if (!rp) {
       return interaction.reply({
         content: "There is no roleplay event in progress.",
         ephemeral: true,
       });
     }
-    if (client.pbr.cache.players.onTime.includes(member.id)) {
+    if (rp.participants.ontime.includes(member.id)) {
       return interaction.reply({
         content: "You have already marked yourself as on time.",
         ephemeral: true,
       });
     }
-    if (client.pbr.cache.players.late.hasOwnProperty(member.id)) {
-      delete client.pbr.cache.players.late[member.id];
-    }
-    if (client.pbr.cache.players.notComing.includes(member.id)) {
-      client.pbr.cache.players.notComing = client.pbr.cache.players.notComing.filter(id => id !== member.id);
-    }
+    // Remove member from late if present
+    rp.participants.late = rp.participants.late.filter(late => late.userId !== member.id);
 
-    client.pbr.cache.players.onTime.push(member.id);
-    const embed = await client.roleplayHandler();
-    const message = await client.channels.cache.get(control.channels.roleplay).messages.fetch(client.pbr.cache.message);
+
+    // Remove member from absent if present
+    if (rp.participants.absent.includes(member.id)) {
+      rp.participants.absent = rp.participants.absent.filter(id => id !== member.id);
+    }
+    // Add member to ontime if not already present
+    if (!rp.participants.ontime.includes(member.id)) {
+      rp.participants.ontime.push(member.id);
+    }
+    await rp.save();
+    const embed = await client.roleplayHandler(rp._id);
+    const message = await client.channels.cache.get(control.channels.roleplay).messages.fetch(rp.messageId);
     await message.edit({ embeds: [embed] });
     await interaction.reply({
         content: "You have been marked as on time.",

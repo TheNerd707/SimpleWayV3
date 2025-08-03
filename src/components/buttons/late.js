@@ -1,5 +1,8 @@
 const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
 const control = require("../../../control.json");
+const rpschema = require('../../schemas/roleplays.js');
+console.log('Imported rpschema:', rpschema);
+
 
 module.exports = {
     data: {
@@ -7,24 +10,28 @@ module.exports = {
     },
     async execute(interaction, client) {
         const { member } = interaction;
-        if (!client.pbr.cache.roleplayActive) {
+       const rp = await rpschema.findOne({}).sort({ timestamp: -1 });
+        if (!rp) {
             return interaction.reply({
                 content: "There is no roleplay event in progress.",
                 ephemeral: true,
             });
         }
-        if (client.pbr.cache.players.late.hasOwnProperty(member.id)) {
-            return interaction.reply({
-                content: "You have already marked yourself as late.",
-                ephemeral: true,
-            });
+        for (const late of rp.participants.late) {
+            if (late.userId === member.id) {
+                return interaction.reply({
+                    content: "You have already marked yourself as late.",
+                    ephemeral: true,
+                });
+            }
         }
-        if (client.pbr.cache.players.onTime.includes(member.id)) {
-            client.pbr.cache.players.onTime = client.pbr.cache.players.onTime.filter(id => id !== member.id);
+        if (rp.participants.ontime.includes(member.id)) {
+            rp.participants.ontime = rp.participants.ontime.filter(id => id !== member.id);
         }
-        if (client.pbr.cache.players.notComing.includes(member.id)) {
-            client.pbr.cache.players.notComing = client.pbr.cache.players.notComing.filter(id => id !== member.id);
+        if (rp.participants.absent.includes(member.id)) {
+            rp.participants.absent = rp.participants.absent.filter(id => id !== member.id);
         }
+        await rp.save();
 
         // Show modal to ask for reason
         const modal = new ModalBuilder()

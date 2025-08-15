@@ -81,6 +81,7 @@ module.exports = {
     ),
 
   async execute(interaction, client) {
+    await interaction.deferReply()
 
     const location = interaction.options.getString("location");
     const timeInput = interaction.options.getString("time");
@@ -179,7 +180,7 @@ module.exports = {
     const random = Math.random();
     const selectedReply = replies.find(r => random < r.chance)?.message || "Done!";
 
-    await interaction.reply({
+    await interaction.editReply({
       content: selectedReply,
       ephemeral: true,
     });

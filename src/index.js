@@ -26,22 +26,6 @@ rl.on("line", (input) => {
   if (input === "sendApp") client.sendApp();
 });
 
-const express = require("express");
-const session = require("express-session");
-const cookieParser = require("cookie-parser");
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(
-  session({
-    secret: process.env.sessionToken, // Replace with a strong, random secret
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false }, // Set to true in production with HTTPS
-  })
-);
-
 const {
   Client,
   Collection,
@@ -111,8 +95,8 @@ client.login(process.env.token);
   connect("mongodb://pi:27017/"+control.db.name).catch(console.error);
 })();
 
-require("./server/main.js")(app, client);
+//API setup 
+const express = require("express");
+const app = express();
+require("./server/main")(app, client);
 
-app.listen(3000, () => {
-  console.log(chalk.green("[Server Status]: Online"));
-});

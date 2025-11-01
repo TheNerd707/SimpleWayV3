@@ -48,5 +48,7 @@ module.exports = {
         staffChannel.send({
             content: dataMessage
         });
+        rp.status = "ongoing";
+        await rp.save();
     },
 };

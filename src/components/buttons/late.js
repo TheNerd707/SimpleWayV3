@@ -1,8 +1,6 @@
 const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
 const control = require("../../../control.json");
 const rpschema = require('../../schemas/roleplays.js');
-console.log('Imported rpschema:', rpschema);
-
 
 module.exports = {
     data: {

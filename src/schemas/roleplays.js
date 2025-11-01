@@ -20,6 +20,16 @@ const roleplaySchema = new Schema({
     type: String,
     required: false,
   },
+  location: {
+    type: String,
+    required: true,
+  },
+  status: {
+    type: String,
+    required: true,
+    enum: ["scheduled", "ongoing", "completed", "canceled"],
+    default: "scheduled",
+  },
 });
 
 module.exports = new model("Roleplay", roleplaySchema, "roleplays");

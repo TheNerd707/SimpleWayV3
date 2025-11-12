@@ -92,7 +92,7 @@ client.handleComponents();
 
 client.login(process.env.token);
 (async () => {
-  connect("mongodb://pi:27017/"+control.db.name).catch(console.error);
+  connect("mongodb://pi.local:27017/"+control.db.name).catch(console.error);
 })();
 
 //API setup 

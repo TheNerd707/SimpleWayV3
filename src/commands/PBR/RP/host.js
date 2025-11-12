@@ -4,9 +4,9 @@ const {
   ButtonBuilder,
   ButtonStyle,
 } = require("discord.js");
-const control = require("../../../control.json");
+const control = require("../../../../control.json");
 
-const rpschema = require('../../schemas/roleplays.js');
+const rpschema = require('../../../schemas/roleplays.js');
 const mongoose = require("mongoose");
 
 const dayjs = require("dayjs");
@@ -81,8 +81,14 @@ module.exports = {
     ),
 
   async execute(interaction, client) {
+    const status = await client.getUserStatus(interaction.user.id);
+    if (status !== "s") {
+      return interaction.reply({
+        content: "You do not have permission to host a roleplay event.",
+        ephemeral: true,
+      });
+    }
     await interaction.deferReply()
-
     const location = interaction.options.getString("location");
     const timeInput = interaction.options.getString("time");
     const timezoneShort = interaction.options.getString("timezone");

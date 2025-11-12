@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("discord.js");
-const control = require("../../../control.json");
+const control = require("../../../../control.json");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -12,7 +12,13 @@ module.exports = {
         ephemeral: true,
       });
     }
-
+    const status = await client.getUserStatus(interaction.user.id)
+    if (status !== "s") {
+      return interaction.reply({
+        content: "You do not have permission to end the roleplay session.",
+        ephemeral: true,
+      });
+    }
     // End the roleplay session
     client.pbr = {};
     client.pbr.cache = {

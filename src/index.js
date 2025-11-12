@@ -2,14 +2,10 @@
 require("dotenv").config();
 const fs = require("fs");
 
-if (
- process.env.NODE_ENV === "dev"
-) {
+if (process.env.NODE_ENV === "dev") {
   const dev = require("../control.dev.json");
   fs.writeFileSync("./control.json", JSON.stringify(dev, null, 4));
-} else if (
-  process.env.NODE_ENV === "prod"
-) {
+} else if (process.env.NODE_ENV === "prod") {
   const prod = require("../control.prod.json");
   fs.writeFileSync("./control.json", JSON.stringify(prod, null, 4));
 }
@@ -75,28 +71,32 @@ client.pbr.cache = {
 client.commandArray = [];
 
 //Function Handaler
-const functionFolders = fs
-  .readdirSync(`./src/functions`)
-  .filter((folder) => folder !== "breaker");
-for (const folder of functionFolders) {
-  const functionFiles = fs
-    .readdirSync(`./src/functions/${folder}`)
-    .filter((file) => file.endsWith(`.js`));
-  for (const file of functionFiles)
-    require(`./functions/${folder}/${file}`)(client);
+const functitionFolders = fs.readdirSync("./src/functions/");
+async function funcHandler(path) {
+  if (path.endsWith(".js")) {
+    require(`../${path}`)(client);
+  } else {
+    const functionFiles = fs
+      .readdirSync(path);
+    for (const file of functionFiles) {
+      funcHandler(`${path}/${file}`);
+    }
+  }
 }
 
+functitionFolders.forEach(async (folder) => {
+  await funcHandler(`./src/functions/${folder}`);
+});
 client.handleEvents();
 client.handleCommands();
 client.handleComponents();
 
 client.login(process.env.token);
 (async () => {
-  connect("mongodb://pi.local:27017/"+control.db.name).catch(console.error);
+  connect("mongodb://pi.local:27017/" + control.db.name).catch(console.error);
 })();
 
-//API setup 
+//API setup
 const express = require("express");
 const app = express();
 require("./server/main")(app, client);
-

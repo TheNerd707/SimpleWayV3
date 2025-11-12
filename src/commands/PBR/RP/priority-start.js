@@ -1,7 +1,7 @@
 //I did not like myself the day I wrote this.
 
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require("discord.js");
-const file = require(`./../../../control.json`);
+const file = require(`../../../../control.json`);
 const control = file.priority;
 
 module.exports = {

@@ -7,6 +7,13 @@ module.exports = {
         .setName('startrp')
         .setDescription('Starts a new roleplay session.'),
     async execute(interaction, client) {
+        const status = await client.getUserStatus(interaction.user.id);
+        if (status !== "s") {
+          return interaction.reply({
+            content: "You do not have permission to start a roleplay session.",
+            ephemeral: true,
+          });
+        }
         const rp = await roleplay.findOne({}).sort({ timestamp: -1 });
         const message1 = 'The roleplay session has started!';
         const message2 = 'Can I join?';

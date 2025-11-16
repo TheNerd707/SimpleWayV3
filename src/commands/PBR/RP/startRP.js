@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const control = require("../../../control.json");
-const roleplay = require(`./../../schemas/roleplays`);
+const control = require("../../../../control.json");
+const roleplay = require(`../../../schemas/roleplays`);
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -8,7 +8,7 @@ module.exports = {
         .setDescription('Starts a new roleplay session.'),
     async execute(interaction, client) {
         const status = await client.getUserStatus(interaction.user.id);
-        if (status !== "s") {
+        if (status.status !== "s") {
           return interaction.reply({
             content: "You do not have permission to start a roleplay session.",
             ephemeral: true,

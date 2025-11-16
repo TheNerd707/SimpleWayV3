@@ -82,7 +82,8 @@ module.exports = {
 
   async execute(interaction, client) {
     const status = await client.getUserStatus(interaction.user.id);
-    if (status !== "s") {
+    if (status.status !== "s") {
+      console.log(status);
       return interaction.reply({
         content: "You do not have permission to host a roleplay event.",
         ephemeral: true,

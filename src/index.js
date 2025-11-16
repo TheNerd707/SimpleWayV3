@@ -67,6 +67,7 @@ client.pbr.cache = {
     notComing: [],
   },
 };
+client.pbr.scalar = 1;
 
 client.commandArray = [];
 

@@ -1,10 +1,11 @@
 const { Schema, model } = require("mongoose");
 const userSchema = new Schema({
   _id: Schema.Types.ObjectId,
-  dcToken: {
+  token: { type: String, required: true, unique: true },
+  discordToken: {
     type: Array,
   },
-  dcId: {
+  discordID: {
     type: String,
     required: true,
   },
@@ -13,6 +14,19 @@ const userSchema = new Schema({
   },
   lastRP: {
     type: Number,
+  },
+  clan: {
+    type: String,
+  },
+  timecards: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Timecard",
+    },
+  ],
+  scalar: {
+    type: Number,
+    default: 1,
   },
 });
 

@@ -13,7 +13,7 @@ module.exports = {
       });
     }
     const status = await client.getUserStatus(interaction.user.id)
-    if (status !== "s") {
+    if (status.status !== "s") {
       return interaction.reply({
         content: "You do not have permission to end the roleplay session.",
         ephemeral: true,

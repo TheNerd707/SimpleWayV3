@@ -48,6 +48,8 @@ module.exports = {
     for (const user of usersToClockOut) {
         const existingTimecard = await Timecard.findOne({ discordID: user.discordID, timeOut: { $exists: false } });
         if (existingTimecard) {
+            user.lastRP = Date.now();
+            await user.save();
             existingTimecard.timeOut = Date.now();
             await existingTimecard.save();
             const roles = client.guilds.cache.get(interaction.guildId).members.cache.get(user.discordID).roles.cache.map(role => role.id);

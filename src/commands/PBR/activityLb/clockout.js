@@ -26,6 +26,9 @@ module.exports = {
         existingTimecard.timeOut = Date.now();
         await existingTimecard.save();
 
+        user.lastRP = Date.now();
+        await user.save();
+
         const rp = await roleplay.findOne({}).sort({ timestamp: -1 });
         if (rp && rp.participants.clockedIn.some(entry => entry.userId === userId)) {
             rp.participants.clockedIn = rp.participants.clockedIn.filter(entry => entry.userId !== userId);

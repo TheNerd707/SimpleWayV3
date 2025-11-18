@@ -29,7 +29,7 @@ module.exports = {
         user = new User({
         _id: new mongoose.Types.ObjectId(),
         discordID: userId, 
-        token: "12345",
+        token: userId,
     });
     }
     const existingTimecard = await Timecard.findOne({ discordID: userId, timeOut: { $exists: false } });

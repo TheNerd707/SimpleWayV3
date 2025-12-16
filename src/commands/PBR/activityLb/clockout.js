@@ -66,11 +66,20 @@ module.exports = {
         record.totalTime += workDuration;
         await masterActivity.save();
         const hours = Math.floor(workDuration / (1000 * 60 * 60));
-      const minutes = Math.floor((workDuration % (1000 * 60 * 60)) / (1000 * 60));
-        
+        const minutes = Math.floor((workDuration % (1000 * 60 * 60)) / (1000 * 60));
+        let message
+        if (hours < 2) {
+            message = "Wow, couldn't even make it to 2 hours?"
+        } else if (hours < 4) {
+            message = "Hmmm, you could do better."
+        } else if (hours < 6) {
+            message = "Go touch grass nerd."
+        } else {
+            message = "You really need a shower, I can smell you and I don't even have a nose."
+        }
         const embed = new EmbedBuilder()
             .setTitle("Clocked Out")
-            .setDescription(`You have successfully clocked out. You worked for ${hours} hours and ${minutes} minutes.`)
+            .setDescription(`You have successfully clocked out. You were in rp for ${hours} hours and ${minutes} minutes.\n${message}`)
             .setColor("Red")
             .setTimestamp();
 

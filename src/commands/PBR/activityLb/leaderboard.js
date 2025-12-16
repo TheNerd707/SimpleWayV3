@@ -23,7 +23,7 @@ module.exports = {
 
     let description = "ACTIVITY LEADERBOARD\n\n";
 
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < 10; i++) {
       const record = sortedLeaderboard[i];
       if (!record) break;
       

@@ -1,7 +1,7 @@
 const { ActivityType } = require('discord.js')
 const chalk = require("chalk");
 module.exports = {
-    name: 'ready',
+    name: 'clientReady',
     once: true,
     async execute(client) {
         const options = [
@@ -14,6 +14,16 @@ module.exports = {
                 type: ActivityType.Listening,
                 text: 'slash commands',
                 status: "online"
+            },
+            {
+                type: ActivityType.Playing,
+                text: 'with code.',
+                status: "dnd"
+            },
+            {
+                type: ActivityType.Watching,
+                text: 'YouTube.',
+                status: "idle"
             }
         ];
 

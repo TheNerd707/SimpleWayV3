@@ -41,7 +41,7 @@ module.exports = (client) => {
     .setLabel("MISCELLANEOUS")
     .setStyle(ButtonStyle.Primary);
 
-    const channel = client.channels.cache.get("1194131766756266034");
+    const channel = client.channels.cache.get("1378628678208196621");
     channel.send({ embeds: [embed1, embed2, embed3],
         components: [new ActionRowBuilder().addComponents(button1, button2, button3)], });
   };

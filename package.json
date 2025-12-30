@@ -1,26 +1,27 @@
 {
-  "name": "y",
+  "name": "newstaffbot",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "test": "clear && node src/index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "@the_nerd1",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/rest": "^2.2.0",
+    "@discordjs/rest": "^2.6.0",
     "chalk": "^4.1.2",
     "cookie-parser": "^1.4.7",
     "dayjs": "^1.11.13",
-    "discord-api-types": "^0.37.67",
-    "discord.js": "^14.19.3",
+    "discord-api-types": "^0.37.120",
+    "discord.js": "^14.25.1",
     "dotenv": "^16.3.1",
     "edit-json-file": "^1.8.0",
     "ejs": "^3.1.10",
-    "express": "^5.1.0",
-    "express-session": "^1.18.1",
-    "mongoose": "^8.0.3",
-    "undici": "^7.8.0"
+    "express": "^5.2.1",
+    "express-session": "^1.18.2",
+    "mongoose": "^8.20.3",
+    "undici": "^7.16.0"
   }
 }

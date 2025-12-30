@@ -3,8 +3,8 @@ const ticketsDB = require("../../schemas/ticket");
 module.exports = {
   name: "messageDelete",
   async execute(message, client) {
-    if (message.channel.parentId != control.channels.ticketParent) return;
-    if (message.channel.id === control.channels.transcrips) { // Ignore the transcript channel{
+    if (message.channel.parentId != control.serverSettings.pbr.channels.ticketParent) return;
+    if (message.channel.id === control.serverSettings.pbr.channels.transcrips) { // Ignore the transcript channel{
       let newMessage = {};
       newMessage.embeds = message.embeds;
       newMessage.components = message.components;
@@ -13,7 +13,7 @@ module.exports = {
         (attachment) => attachment.url
       );
       newMessage.content = `This transcript was deleted by someone.`;
-      message.channel.send(newMessage);
+      message.channel.send({ embeds: newMessage.embeds, components: newMessage.components, content: newMessage.content, attachments: newMessage.attachments });
       return;
     }
     const ticket = await ticketsDB.findOne({

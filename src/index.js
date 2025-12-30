@@ -1,7 +1,19 @@
-//Main File
-require("dotenv").config();
-const fs = require("fs");
+//If you are reading this, you are either curious, lost, or dumb. Welcome nonetheless!
 
+//Imports from Libraries
+require("dotenv").config();
+const {
+  Client,
+  Collection,
+  GatewayIntentBits,
+  Partials,
+} = require("discord.js");
+const {connect} = require("mongoose");
+const fs = require("fs");
+const path = require("path");
+
+
+//setup config file based on environment
 if (process.env.NODE_ENV === "dev") {
   const dev = require("../control.dev.json");
   fs.writeFileSync("./control.json", JSON.stringify(dev, null, 4));
@@ -9,28 +21,10 @@ if (process.env.NODE_ENV === "dev") {
   const prod = require("../control.prod.json");
   fs.writeFileSync("./control.json", JSON.stringify(prod, null, 4));
 }
-
 const control = require("../control.json");
-const { databaseToken } = process.env;
-const { connect } = require("mongoose");
-const readline = require("readline");
-const { stdin: input, stdout: output } = require("node:process");
-const chalk = require("chalk");
-const rl = readline.createInterface({ input, output });
-rl.on("line", (input) => {
-  if (input === "Send") client.send();
-  if (input === "sendApp") client.sendApp();
-});
 
-const {
-  Client,
-  Collection,
-  GatewayIntentBits,
-  Partials,
-  Events,
-  AuditLogEvent,
-} = require("discord.js");
 
+//Create a new client instance
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -44,32 +38,19 @@ const client = new Client({
   partials: [Partials.Channel, Partials.Message],
 });
 
-//Needed for certant cmds
-client.priorityStatus = false;
-
-//Needed for function handalers to work
-client.commands = new Collection();
+client.commands = [];
+client.commandArray = [];
 client.buttons = new Collection();
 client.selectMenus = new Collection();
 client.modals = new Collection();
-client.textCommands = new Collection();
 
-client.pbr = {};
-client.pbr.cache = {
-  message: null,
-  roleplayActive: false,
-  hosts: [],
-  timestamp: null,
-  location: null,
-  players: {
-    onTime: [],
-    late: {},
-    notComing: [],
-  },
-};
-client.pbr.scalar = 1;
+for (const server in control.servers) {
+  client.commands[server] = new Collection();
+  client.commandArray[server] = [];
+}
+client.commands['global'] = new Collection();
+client.commandArray['global'] = [];
 
-client.commandArray = [];
 
 //Function Handaler
 const functitionFolders = fs.readdirSync("./src/functions/");
@@ -92,12 +73,19 @@ client.handleEvents();
 client.handleCommands();
 client.handleComponents();
 
-client.login(process.env.token);
-(async () => {
-  connect("mongodb://pi.local:27017/" + control.db.name).catch(console.error);
-})();
 
 //API setup
 const express = require("express");
+const chalk = require("chalk");
 const app = express();
-require("./server/main")(app, client);
+
+setTimeout(() => {
+  console.log(chalk.blueBright("[Status]: Initialization started"));
+}, 1000);
+setTimeout(() => {
+  require("./server/main")(app, client);
+  client.login(process.env.token);
+(async () => {
+  connect("mongodb://pi.local:27017/" + control.db.name).catch(console.error);
+})();
+}, 5000); //Delay to allow other setups to complete, making sure all commands are loaded before bot goes online. Increase as needed or disable if you are not weird like me

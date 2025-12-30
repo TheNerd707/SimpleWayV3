@@ -4,12 +4,8 @@ module.exports = {
     name: 'messageCreate',
     async execute(message, client) {
         if (message.author.bot) return;
-        if (message.channel.parentId === control.channels.apply) {
-            client.applicationHandler(message)
-            return;
-        }
-        if (message.channel.parentId != control.channels.ticketParent) return;
-        if (message.channel.id === control.channels.transcrips) return;
+        if (message.channel.parentId != control.serverSettings.pbr.channels.ticketParent) return;
+        if (message.channel.id === control.serverSettings.pbr.channels.transcrips) return;
         const ticket = await ticketsDB.findOne({
             channelId: message.channel.id,
         });

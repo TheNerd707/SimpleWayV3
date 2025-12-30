@@ -8,6 +8,7 @@ module.exports = {
     async execute(interaction, client) {
         const { member } = interaction;
         const rp = await rpschema.findOne({}).sort({ timestamp: -1 });
+
         if (!rp) {
             return interaction.reply({
                 content: "There is no roleplay event in progress.",
@@ -28,9 +29,13 @@ module.exports = {
         rp.participants.late = rp.participants.late.filter(late => late.userId !== member.id);
 
         rp.participants.absent.push(member.id);
+        console.log(rp.participants);
         await rp.save();
         const embed = await client.roleplayHandler(rp._id);
-        const message = await client.channels.cache.get(control.channels.roleplay).messages.fetch(rp.messageId);
+
+        const message = await client.channels.cache.get(control.serverSettings.pbr.channels.roleplay).messages.fetch(rp.messageId);
+        
+        
         await message.edit({ embeds: [embed] });
         await interaction.reply({
             content: "You have been marked as not coming.",

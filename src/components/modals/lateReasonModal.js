@@ -23,7 +23,7 @@ module.exports = {
 
         // Update the roleplay message
         const embed = await client.roleplayHandler(rp._id);
-        const message = await client.channels.cache.get(control.channels.roleplay).messages.fetch(rp.messageId);
+        const message = await client.channels.cache.get(control.serverSettings.pbr.channels.roleplay).messages.fetch(rp.messageId);
         await message.edit({ embeds: [embed] });
     }
 };

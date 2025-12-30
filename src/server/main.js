@@ -2,6 +2,7 @@ const chalk = require("chalk");
 const express = require("express");
 
 module.exports = (app, client) => {
+
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 

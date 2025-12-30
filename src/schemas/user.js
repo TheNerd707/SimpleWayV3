@@ -24,10 +24,11 @@ const userSchema = new Schema({
       ref: "Timecard",
     },
   ],
-  scalar: {
-    type: Number,
-    default: 1,
-  },
+  departments: {
+    type: [String],
+    default: [],
+    enum: ["SASP", "LSSD", "SAFR", "LSPD", "CIV", "STAFF"]
+  }
 });
 
 module.exports = new model("User", userSchema, "user");

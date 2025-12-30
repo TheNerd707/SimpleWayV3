@@ -1,6 +1,4 @@
-const { ChannelType, MessageFlags, EmbedBuilder, PermissionFlagsBits } = require("discord.js");
-const applicationDB = require("../../schemas/applications");
-const mongoose = require("mongoose");
+const { ChannelType, MessageFlags, EmbedBuilder, PermissionFlagsBits, ButtonBuilder, ButtonStyle, ActionRowBuilder} = require("discord.js");
 const control = require("../../../control.json");
 
 module.exports = {
@@ -8,28 +6,16 @@ module.exports = {
     name: "apply",
   },
   async execute(interaction, client) {
-    const test = await applicationDB.find({
-      user: interaction.member.id,
-    });
-    if (test.length > 0) {
-      for (const app of test) {
-        if (app.status !== "completed" && app.status !== "NULL") {
-          return interaction.reply({
-            content: "You already have an application in progress. Contact the_nerd1 to nullify it.",
-            flags: MessageFlags.Ephemeral,
-          });
-        }
-      }
-    }
+    
     const { guild, member } = interaction;
-    const everyone = control.guild.id;
+    const everyone = control.servers.pbr;
     
     const { ViewChannel, SendMessages} = PermissionFlagsBits;
 
     const channel = await guild.channels.create({
       name: `application - ${member.user.username}`,
       type: ChannelType.GuildText,
-      parent: guild.channels.cache.get(control.channels.apply),
+      parent: guild.channels.cache.get(control.serverSettings.pbr.channels.apply),
 
       permissionOverwrites: [
         {
@@ -37,7 +23,7 @@ module.exports = {
           allow: [ViewChannel, SendMessages],
         },
         {
-          id: control.roles.staff,
+          id: control.serverSettings.pbr.roles.staff,
           allow: [ViewChannel, SendMessages],
         },
         {
@@ -54,26 +40,25 @@ module.exports = {
     const embed = new EmbedBuilder()
       .setTitle("**PBR | APPLICATION**")
       .setDescription(
-        'Before we begin this short process, please make sure you have read the rules located in <#1194767732592353321>.\n\nOnce you have done so, please type the following: "I have read the rules, and I agree to follow them." If you do not agree, please leave this Discord server.'
+        "Welcome to Project Black Rose! The first step to becoming a member of our community, is to fill out our written application. Please press the button bellow to be directed to the Google Form."
       )
       .setColor("#fc1703");
-    channel.send({
+    const embed2 = new EmbedBuilder()
+      .setDescription(
+        "After submitting the form, please type in this channel \"I've submitted my application!\" so a staff member can review it as soon as possible."
+      )
+      .setColor("#fc1703");
+    const button = new ButtonBuilder()
+      .setLabel("APPLICATION FORM")
+      .setStyle(ButtonStyle.Link)
+      .setURL("https://docs.google.com/forms/d/e/1FAIpQLScQPafsB8RyrrH_mA8q5VlC8IcxCngTqjVsBQvvTYmErFt3WQ/viewform?usp=sharing&ouid=105697972903739172539");
+    await channel.send({
       content: `<@${member.id}>`,
       embeds: [embed],
+      components: [new ActionRowBuilder().addComponents(button)],
     });
-    const app = new applicationDB({
-      _id: new mongoose.Types.ObjectId(),
-      user: member.id,
-      channelId: channel.id,
-      status: "rules",
-      messages: [
-        {
-          user: "ADMIN",
-          message: "Application started.",
-          time: new Date(),
-        },
-      ],
-    });
-    await app.save();
+     setTimeout(async () => {
+      await channel.send({ embeds: [embed2] });
+    }, 30000);
   },
 };

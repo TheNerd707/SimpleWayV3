@@ -18,13 +18,13 @@ module.exports = {
     const { guild, member, user } = interaction;
     const { ViewChannel, ReadMessageHistory, SendMessages } =
       PermissionFlagsBits;
-    const staff = control.roles.admin;
-    const everyone = control.guild.id;
+    const staff = control.serverSettings.pbr.roles.admin;
+    const everyone = control.servers.pbr;
     const num = await client.ticketNumber();
     const channel = await guild.channels.create({
       name: `administrative - ${num}`,
       type: ChannelType.GuildText,
-      parent: guild.channels.cache.get(control.channels.ticketParent),
+      parent: guild.channels.cache.get(control.serverSettings.pbr.channels.ticketParent),
 
       permissionOverwrites: [
         {

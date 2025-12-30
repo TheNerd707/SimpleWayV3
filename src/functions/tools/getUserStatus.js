@@ -1,16 +1,19 @@
 const control = require("../../../control.json");
 
 module.exports = (client) => {
-  client.getUserStatus = async (userId) => {
+  client.getUserStatus = async (userId, server) => {
     try {
-      const guild = await client.guilds.fetch(control.guild.id);
+      const guild = await client.guilds.fetch(server);
       const user = await guild.members.fetch(userId);
       if (!user) throw new Error("User not found");
+      const serverKey = Object.keys(control.servers).find(
+        (key) => control.servers[key] === server
+      );
+      if (!serverKey) throw new Error("Server not found in control.json");
 
       const roles = user.roles.cache.map((role) => role.id);
-      const isWhitelisted = roles.includes(control.roles.whitelisted);
-      const isStaff = roles.includes(control.roles.staff);
-
+      const isWhitelisted = roles.includes(control.serverSettings[serverKey].roles.whitelisted);
+      const isStaff = roles.includes(control.serverSettings[serverKey].roles.staff);
       let status = false;
       if (isStaff) {
         status = "s"; // staff

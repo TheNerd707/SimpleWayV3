@@ -75,7 +75,7 @@ module.exports = {
             .setLabel("View Ticket")
             .setURL(url)
             .setStyle(ButtonStyle.Link);
-        const logChannel = client.channels.cache.get(control.channels.transcrips);
+        const logChannel = client.channels.cache.get(control.serverSettings.pbr.channels.transcrips);
         await logChannel.send({
             embeds: [embed],
             components: [new ActionRowBuilder().addComponents(button)]

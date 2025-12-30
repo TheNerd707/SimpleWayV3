@@ -8,7 +8,8 @@ module.exports = {
       (key) => control.servers[key] === member.guild.id
     );
     if (!serverKey) return;
-    const welcomeChannelId = control.serverSettings[serverKey]?.channels.welcomeChannel;
+
+    const welcomeChannelId = control.serverSettings[serverKey]?.channels.welcome;
     if (!welcomeChannelId) return;
 
     const welcomeChannel = await member.guild.channels
@@ -48,6 +49,19 @@ module.exports = {
         avatarURL:
           "https://cdn.discordapp.com/attachments/1052328721882816523/1236165364975407165/64117E29-FAD8-4EE8-BFFC-5E214D9190E4.png?ex=6812f1b5&is=6811a035&hm=322fc9318a78d534b56693de4f7a722f8c64c23197edd14e93ce41afdef212b3&",
       });
+    }
+
+    const roleId = control.serverSettings[serverKey]?.roles.unwhitelisted;
+    if (roleId) {
+      const role = await member.guild.roles.fetch(roleId);
+      if (role) {
+        await member.roles.add(role).catch((err) => {
+          console.error(
+            `Failed to assign role to ${member.user.tag}:`,
+            err
+          );
+        });
+      }
     }
   },
 };

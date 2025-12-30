@@ -24,7 +24,10 @@ module.exports = {
     const targetUser = interaction.options.getUser("target");
     let usersToClockOut = [];
 
-    const status = await client.getUserStatus(interaction.user.id, interaction.guildId);
+    const status = await client.getUserStatus(
+      interaction.user.id,
+      interaction.guildId
+    );
     if (status.status !== "s" && status.status !== "ia") {
       return interaction.editReply(
         "You do not have permission to use this command."
@@ -62,7 +65,7 @@ module.exports = {
         timeOut: { $exists: false },
       });
       if (existingTimecard) {
-        let userId = user.discordID
+        let userId = user.discordID;
         if (
           rp &&
           rp.participants.clockedIn.some((entry) => entry.userId === userId)
@@ -80,10 +83,11 @@ module.exports = {
         await user.save();
         existingTimecard.timeOut = Date.now();
         await existingTimecard.save();
-        const roles = client.guilds.cache
-          .get(interaction.guildId)
-          .members.cache.get(user.discordID)
-          .roles.cache.map((role) => role.id);
+        const guild = await client.guilds.fetch(interaction.guildId);
+        const member = await guild.members.fetch(user.discordID);
+
+        const roles = member.roles.cache.map((role) => role.id);
+
         let roleScalar = 1;
         if (roles.includes(controls.serverSettings.pbr.roles.management)) {
           roleScalar += 0.25;

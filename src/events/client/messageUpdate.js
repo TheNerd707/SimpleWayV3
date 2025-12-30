@@ -3,8 +3,8 @@ const ticketsDB = require("../../schemas/ticket");
 module.exports = {
   name: "messageUpdate",
   async execute(old, message, client) {
-    if (message.channel.parentId != control.channels.ticketParent) return;
-    if (message.channel.id === control.channels.transcrips) return; // Ignore the transcript channel
+    if (message.channel.parentId != control.serverSettings.pbr.channels.ticketParent) return;
+    if (message.channel.id === control.serverSettings.pbr.channels.transcrips) return; // Ignore the transcript channel
     const ticket = await ticketsDB.findOne({
       channelId: message.channel.id,
     });

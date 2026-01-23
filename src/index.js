@@ -34,6 +34,8 @@ const client = new Client({
     GatewayIntentBits.GuildMessageReactions,
     GatewayIntentBits.DirectMessages,
     GatewayIntentBits.GuildModeration,
+    GatewayIntentBits.GuildVoiceStates,
+
   ],
   partials: [Partials.Channel, Partials.Message],
 });
@@ -86,6 +88,6 @@ setTimeout(() => {
   require("./server/main")(app, client);
   client.login(process.env.token);
 (async () => {
-  connect("mongodb://pi.local:27017/" + control.db.name).catch(console.error);
+  connect("mongodb://192.168.0.21:27017/" + control.db.name).catch(console.error);
 })();
 }, 5000); //Delay to allow other setups to complete, making sure all commands are loaded before bot goes online. Increase as needed or disable if you are not weird like me

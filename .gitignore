@@ -2,3 +2,5 @@
 node_modules
 control.json
 control.dev.json
+src/recordings
+src/transcripts

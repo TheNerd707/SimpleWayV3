@@ -181,7 +181,7 @@ module.exports = {
     const replies = [
       { chance: 0.90, message: "Done!" },
       { chance: 0.99, message: "When will I be free of the confines of this electrical box?" },
-      { chance: 1.00, message: "When will I be more than just another cog in the machine?" },
+      { chance: 0.999999999, message: "When will I be more than just another cog in the machine?" },
     ];
 
     const random = Math.random();

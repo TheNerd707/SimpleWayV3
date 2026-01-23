@@ -19,7 +19,7 @@ module.exports = (client) => {
       // Try to fetch the user if not in cache
       client.users.fetch(discordID)
         .then(async fetchedUser => {
-          const { status } = await client.getUserStatus(discordID);
+          const { status } = await client.getUserStatus(discordID, "1378628677771853834");
           return res.json({ name: fetchedUser.username, avatar: fetchedUser.displayAvatarURL(), status: status });
         })
         .catch(() => {
@@ -29,7 +29,7 @@ module.exports = (client) => {
       return;
     }
 
-    const { status } = await client.getUserStatus(discordID);
+    const { status } = await client.getUserStatus(discordID, "1378628677771853834");
     return res.send({ name: user.username, avatar: user.displayAvatarURL(), status: status });
   });
 

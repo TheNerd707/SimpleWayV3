@@ -7,17 +7,18 @@ module.exports = {
         name: 'late'
     },
     async execute(interaction, client) {
+        interaction.deferReply({ ephemeral: true });
         const { member } = interaction;
        const rp = await rpschema.findOne({}).sort({ timestamp: -1 });
         if (!rp) {
-            return interaction.reply({
+            return interaction.editReply({
                 content: "There is no roleplay event in progress.",
                 ephemeral: true,
             });
         }
         for (const late of rp.participants.late) {
             if (late.userId === member.id) {
-                return interaction.reply({
+                return interaction.editReply({
                     content: "You have already marked yourself as late.",
                     ephemeral: true,
                 });

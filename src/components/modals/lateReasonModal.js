@@ -5,6 +5,7 @@ module.exports = {
         name: 'lateReasonModal'
     },
     async execute(interaction, client) {
+        interaction.deferReply({ ephemeral: true });
         const { member } = interaction;
         const time = interaction.fields.getTextInputValue('time');
         const rp = await rpschema.findOne({}).sort({ timestamp: -1 });
@@ -16,7 +17,7 @@ module.exports = {
         });
         await rp.save();
 
-        await interaction.reply({
+        await interaction.editReply({
             content: `You have been marked as late. Expected arrival time: **${time}**.`,
             ephemeral: true,
         });

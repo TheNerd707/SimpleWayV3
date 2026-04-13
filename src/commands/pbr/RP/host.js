@@ -101,7 +101,7 @@ module.exports = {
     const timeRegex = /^(\d{1,2}):(\d{2})(?:\s*([AP]M))?$/i;
     const match = timeInput.trim().toUpperCase().match(timeRegex);
     if (!match) {
-      return interaction.reply({
+      return interaction.editReply({
         content:
           "Invalid time format. Please use 'HH:MM AM/PM' or 24-hour format.",
         ephemeral: true,

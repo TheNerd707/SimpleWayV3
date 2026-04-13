@@ -5,16 +5,17 @@ module.exports = {
     name: 'ontime'
   },
   async execute(interaction, client) {
+    await interaction.deferReply({ ephemeral: true });
     const member = interaction.member;
     const rp = await rpschema.findOne({}).sort({ timestamp: -1 });
     if (!rp) {
-      return interaction.reply({
+      return interaction.editReply({
         content: "There is no roleplay event in progress.",
         ephemeral: true,
       });
     }
     if (rp.participants.ontime.includes(member.id)) {
-      return interaction.reply({
+      return interaction.editReply({
         content: "You have already marked yourself as on time.",
         ephemeral: true,
       });
@@ -35,7 +36,7 @@ module.exports = {
     const embed = await client.roleplayHandler(rp._id);
     const message = await client.channels.cache.get(control.serverSettings.pbr.channels.roleplay).messages.fetch(rp.messageId);
     await message.edit({ embeds: [embed] });
-    await interaction.reply({
+    await interaction.editReply({
         content: "You have been marked as on time.",
         ephemeral: true,
     });
